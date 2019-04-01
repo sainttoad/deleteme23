@@ -1,3 +1,6 @@
-docker build -f Dockerfile -t stt .
+docker build -f Dockerfile -t deleteme23 .
 
-docker run --rm --name stt -v`pwd`/2019_twitter:/tweets -v`pwd`/app:/stt -ti -e TWITTER_USERNAME=jack stt
+docker run --rm --name deleteme23 -v`pwd`/2019_twitter:/tweets -v`pwd`/app:/deleteme23 -ti -e TWITTER_USERNAME=jack deleteme23
+
+cron:
+23 * * * * /usr/bin/docker run --rm --name deleteme23 -e TWITTER_USERNAME=jack deleteme23 > /tmp/deleteme23.log 2>&1

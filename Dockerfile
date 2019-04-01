@@ -5,9 +5,9 @@ RUN pip3 install --upgrade pip
 ADD app/requirements.txt /tmp/requirements.txt
 RUN cd /tmp && pip3 install -r requirements.txt
 
-ADD app /stt
+ADD app /deleteme23
 ADD secrets/secrets /secrets
 
-WORKDIR /stt
+WORKDIR /deleteme23
 
-CMD python3 ./stt.py
+CMD python3 ./deleteme23.py

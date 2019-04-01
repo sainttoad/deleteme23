@@ -9,15 +9,18 @@ access_token_key    = '85117657-Lpfqzxr0H6jyk83zm5S2ChfBcpwdmIPvqtOPP1bO0'
 username            = os.environ['TWITTER_USERNAME']
 
 with open("/secrets") as f:
-    consumer_secret, access_token_secret = map(str.strip, f.read().split("\n"))
+    consumer_secret, access_token_secret = map(str.strip, f.read().strip().split("\n"))
 
 api = twitter.Api(consumer_key=consumer_key,
                   consumer_secret=consumer_secret,
                   access_token_key=access_token_key,
                   access_token_secret=access_token_secret)
 
-with open("./deleted.txt") as f:
-    deleted_ids = [ int(line) for line in f.read().split("\n") if len(line) ]
+if os.path.exists('./deleted.txt'):
+    with open("./deleted.txt") as f:
+        deleted_ids = [ int(line) for line in f.read().split("\n") if len(line) ]
+else:
+    deleted_ids = []
 
 def add_to_deleted(id):
     with open("./deleted.txt", "a") as f:
