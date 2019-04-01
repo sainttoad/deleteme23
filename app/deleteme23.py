@@ -45,7 +45,13 @@ def delete_via_archive():
                                 else:
                                     print("{} : {}".format(e.__class__, e))
 
-def delete_recent():
+def is_recent(s):
+    # Fri Feb 15 06:30:50 +0000 2019
+    created_at = datetime.datetime.strptime(s.created_at, "%a %b %d %H:%M:%S %z %Y")
+    diff = datetime.datetime.now(tz=datetime.timezone.utc) - created_at
+    return diff.days > 0 or diff.seconds / 60 /60 > 23
+
+def delete_recent_tweets():
     last_id = None
 
     while True:
@@ -56,13 +62,27 @@ def delete_recent():
             break
 
         for s in statuses:
-            # Fri Feb 15 06:30:50 +0000 2019
-            created_at = datetime.datetime.strptime(s.created_at, "%a %b %d %H:%M:%S %z %Y")
-            diff = datetime.datetime.now(tz=datetime.timezone.utc) - created_at
-            if diff.days > 0 or diff.seconds / 60 /60 > 23:
+            if is_recent(s):
                 print("{} : {} : {} : {}".format(s.id, s.created_at, s.retweeted, s.retweeted_status.user.screen_name if s.retweeted else ''))
                 api.DestroyStatus(s.id)
 
+        print("-------")
+
+        time.sleep(1)
+
+def delete_recent_retweets():
+    last_id = None
+    while True:
+        retweets = api.GetUserRetweets(count=200, max_id=last_id)
+        if retweets:
+            last_id = retweets[-1].id - 1
+        else:
+            break
+
+        for s in retweets:
+            if is_recent(s):
+                print("{} : {} : {} : {}".format(s.id, s.created_at, s.retweeted, s.retweeted_status.user.screen_name if s.retweeted else ''))
+                api.DestroyStatus(s.id)
         print("-------")
 
         time.sleep(1)
@@ -91,6 +111,8 @@ def delete_favorites():
 
 
 if __name__ == "__main__":
-    delete_recent()
+    # delete_recent_tweets()
+    delete_recent_retweets()
     # delete_favorites()
     # delete_via_archive()
+
