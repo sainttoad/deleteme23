@@ -1,0 +1,3 @@
+docker build -f Dockerfile -t stt .
+
+docker run --rm --name stt -v`pwd`/2019_twitter:/tweets -v`pwd`/app:/stt -ti -e TWITTER_USERNAME=jack stt
